@@ -1,7 +1,8 @@
-const express = require('express')
-const app = express();
+const express = require('express');
+const morgan = require('morgan');
 
-app.use(express.json());
+const app = express();
+const PORT = 3001;
 
 let people = [
   { 
@@ -25,6 +26,10 @@ let people = [
     "number": "39-23-6423122"
   }
 ];
+
+app.use(express.json());
+morgan.token('body', (req, res) => JSON.stringify(req.body));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'));
 
 app.get('/', (request, response) => {
   response.send('<h1>Wow...this works</h1>')
@@ -86,7 +91,10 @@ app.delete('/api/people/:id', (request, response) => {
   response.status(204).end();
 });
 
-const PORT = 3001
+// function morgan(tokens, req, res) {
+  
+// }
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
